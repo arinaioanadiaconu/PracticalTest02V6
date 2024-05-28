@@ -15,34 +15,35 @@ public class ClientThread extends Thread {
 
     private final String address;
     private final int port;
-    private final String city;
-    private final String informationType;
-    private final TextView weatherForecastTextView;
+    private final String word;
+    private final TextView anagramsTextView;
 
     private Socket socket;
 
-    public ClientThread(String address, int port, String city, String informationType, TextView weatherForecastTextView) {
+    public ClientThread(String address, int port, String word, TextView anagramsTextView) {
         this.address = address;
         this.port = port;
-        this.city = city;
-        this.informationType = informationType;
-        this.weatherForecastTextView = weatherForecastTextView;
+        this.word = word;
+        this.anagramsTextView = anagramsTextView;
     }
 
     @Override
     public void run() {
         try {
+            Log.e(Constants.TAG, "[CLIENT THREAD] Starting client thread...");
             socket = new Socket(address, port);
             BufferedReader bufferedReader = Utilities.getReader(socket);
             PrintWriter printWriter = Utilities.getWriter(socket);
-            printWriter.println(city);
+
+            printWriter.println(word);
             printWriter.flush();
-            printWriter.println(informationType);
-            printWriter.flush();
-            String weatherInformation;
-            while ((weatherInformation = bufferedReader.readLine()) != null) {
-                final String finalizedWeatherInformation = weatherInformation;
-                weatherForecastTextView.post(() -> weatherForecastTextView.setText(finalizedWeatherInformation));
+
+            Log.e(Constants.TAG, "[CLIENT THREAD] Sent word: " + word);
+
+            String anagramsInformation;
+            while ((anagramsInformation = bufferedReader.readLine()) != null) {
+                final String finalizedAnagramsInformation = anagramsInformation;
+                anagramsTextView.post(() -> anagramsTextView.setText(finalizedAnagramsInformation));
             }
         } catch (IOException ioException) {
             Log.e(Constants.TAG, "[CLIENT THREAD] An exception has occurred: " + ioException.getMessage());

@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,9 +19,8 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
     private EditText serverPortEditText = null;
     private EditText clientAddressEditText = null;
     private EditText clientPortEditText = null;
-    private EditText cityEditText = null;
-    private Spinner informationTypeSpinner = null;
-    private TextView weatherForecastTextView = null;
+    private EditText wordEditText = null;
+    private TextView anagramsTextView = null;
 
     private ServerThread serverThread = null;
 
@@ -46,8 +44,8 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
 
     }
 
-    private final GetWeatherForecastButtonClickListener getWeatherForecastButtonClickListener = new GetWeatherForecastButtonClickListener();
-    private class GetWeatherForecastButtonClickListener implements Button.OnClickListener {
+    private final GetAnagramsButtonClickListener getAnagramsButtonClickListener = new GetAnagramsButtonClickListener();
+    private class GetAnagramsButtonClickListener implements Button.OnClickListener {
 
         @Override
         public void onClick(View view) {
@@ -61,17 +59,17 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] There is no server to connect to!", Toast.LENGTH_SHORT).show();
                 return;
             }
-            String city = cityEditText.getText().toString();
-            String informationType = informationTypeSpinner.getSelectedItem().toString();
-            if (city.isEmpty() || informationType.isEmpty()) {
-                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Parameters from client (city / information type) should be filled", Toast.LENGTH_SHORT).show();
+            String word = wordEditText.getText().toString();
+
+            if (word.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Parameters from client (word) should be filled", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            weatherForecastTextView.setText(Constants.EMPTY_STRING);
+            anagramsTextView.setText(Constants.EMPTY_STRING);
 
             ClientThread clientThread = new ClientThread(
-                    clientAddress, Integer.parseInt(clientPort), city, informationType, weatherForecastTextView
+                    clientAddress, Integer.parseInt(clientPort), word, anagramsTextView
             );
             clientThread.start();
         }
@@ -90,11 +88,12 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
 
         clientAddressEditText = (EditText)findViewById(R.id.client_address_edit_text);
         clientPortEditText = (EditText)findViewById(R.id.client_port_edit_text);
-        cityEditText = (EditText)findViewById(R.id.city_edit_text);
-        informationTypeSpinner = (Spinner)findViewById(R.id.information_type_spinner);
-        Button getWeatherForecastButton = (Button) findViewById(R.id.get_weather_forecast_button);
-        getWeatherForecastButton.setOnClickListener(getWeatherForecastButtonClickListener);
-        weatherForecastTextView = (TextView)findViewById(R.id.weather_forecast_text_view);
+
+        wordEditText = (EditText)findViewById(R.id.word_edit_text);
+
+        Button getAnagramsButton = (Button) findViewById(R.id.get_anagrams_button);
+        getAnagramsButton.setOnClickListener(getAnagramsButtonClickListener);
+        anagramsTextView = (TextView)findViewById(R.id.anagrams_text_view);
     }
 
     @Override
