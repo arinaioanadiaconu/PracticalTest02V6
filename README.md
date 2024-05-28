@@ -1,1 +1,4 @@
 # PracticalTest02V6
+
+DIACONU ARINA-IOANA
+341C1
